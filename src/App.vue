@@ -6,7 +6,6 @@ import Grid from "./components/Grid.vue";
   <div class="flex flex-col">
     <h1 class="text-5xl pb-10">Sudoku Solver</h1>
     <Grid />
-    
   </div>
 </template>
 
