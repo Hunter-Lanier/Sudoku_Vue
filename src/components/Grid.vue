@@ -10,12 +10,21 @@
         :key="cellIndex"
         v-model="sudokuBoard[rowIndex][cellIndex]"
         :class="[
-          'grid-cell w-16 h-16 text-center text-2xl font-bold bg-gray outline outline-1 text',
+          'grid-cell gap-0 w-9 h-9 text-center text-1xl font-bold bg-gray outline outline-1 text box-border items-stretch',
           cellClass(rowIndex, cellIndex),
+          rowIndex === selectedRow ||
+          cellIndex === selectedCol ||
+          (selectedGroup &&
+            Math.floor(rowIndex / 3) === selectedGroup.row &&
+            Math.floor(cellIndex / 3) === selectedGroup.col)
+            ? 'bg-gray-700'
+            : '',
         ]"
         type="number"
         min="1"
         max="9"
+        @input="validateInput(rowIndex, cellIndex)"
+        @focus="selectCell(rowIndex, cellIndex)"
       />
     </div>
     <div class="mt-5 flex justify-around align-middle">
@@ -32,10 +41,38 @@ export default {
     return {
       sudokuBoard: Array.from({ length: 9 }, () => Array(9).fill("")),
       solvedBoard: Array.from({ length: 9 }, () => Array(9).fill("")),
+      selectedRow: null,
+      selectedCol: null,
+      selectedGroup: null,
     };
   },
   methods: {
+    selectCell(rowIndex, cellIndex) {
+      this.selectedRow = rowIndex;
+      this.selectedCol = cellIndex;
+      this.selectedGroup = {
+        row: Math.floor(rowIndex / 3),
+        col: Math.floor(cellIndex / 3),
+      };
+    },
+    validateInput(rowIndex, cellIndex) {
+      let value = this.sudokuBoard[rowIndex][cellIndex];
+      if (value < 0) {
+        this.sudokuBoard[rowIndex][cellIndex] = 1;
+      } else if (value > 9) {
+        this.sudokuBoard[rowIndex][cellIndex] = 9;
+      } else if (typeof value === "string" || value instanceof String) {
+        this.sudokuBoard[rowIndex][cellIndex] = parseInt(value.charAt(0));
+      }
+    },
     submitBoard() {
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          if (this.sudokuBoard[row][col] === "") {
+            this.sudokuBoard[row][col] = 0;
+          }
+        }
+      }
       const solve = (board) => {
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
