@@ -16,23 +16,27 @@
     </button>
   </div>
   <div class="mt-4 w-full flex justify-around">
-    <button class="">Start</button>
-    <button class="">Reset</button>
+    <button @click="emitStartGame" class="">Start</button>
+    <button @click="emitResetGame" class="">Reset</button>
     <button class="">Solve</button>
   </div>
 </template>
 <script>
 export default {
   data() {
-    return {
-      gridData: this.gridData,
-    };
+    return {};
   },
-  props: ["selectedNumber"],
+  props: ["selectedNumber", "gridData"],
   methods: {
     setCurrentNumber(n) {
       this.$emit("update-number", n);
-      console.log(console.log(this.selectedNumber));
+    },
+    emitResetGame() {
+      this.$emit("reset-game");
+    },
+    emitStartGame() {
+      this.$emit("start-game");
+      console.log("emit start game");
     },
   },
 };
