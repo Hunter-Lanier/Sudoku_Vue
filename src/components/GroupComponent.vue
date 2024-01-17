@@ -5,7 +5,7 @@
       :key="index"
       :cellData="cell"
       :selectedNumber="selectedNumber"
-      @update="emitCellUpdate(index, $event)"
+      @update="handleCellUpdate(index, $event)"
     >
     </cell-component>
   </div>
@@ -20,7 +20,7 @@ export default {
   },
   props: ["groupData", "groupIndex", "selectedNumber"],
   methods: {
-    emitCellUpdate(cellIndex, newValue) {
+    handleCellUpdate(cellIndex, newValue) {
       this.$emit("cell-update", {
         groupIndex: this.groupIndex,
         cellIndex,

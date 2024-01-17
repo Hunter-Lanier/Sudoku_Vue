@@ -9,6 +9,9 @@ export default {
   data() {
     return {
       selectedNumber: null,
+      gridData: Array.from({ length: 9 }, () =>
+        Array.from({ length: 9 }, () => null)
+      ),
     };
   },
   methods: {},
@@ -19,7 +22,10 @@ export default {
 <template>
   <div class="flex h-full w-full flex-col items-center align-middle relative">
     <GameComponent></GameComponent>
-    <BoardComponent :selectedNumber="selectedNumber"></BoardComponent>
+    <BoardComponent
+      :selectedNumber="selectedNumber"
+      :gridData="gridData"
+    ></BoardComponent>
     <InputComponent
       :selectedNuumber="selectedNumber"
       @update-number="selectedNumber = $event"

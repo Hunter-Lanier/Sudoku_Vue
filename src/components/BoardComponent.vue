@@ -21,13 +21,9 @@ export default {
   components: {
     GroupComponent,
   },
-  props: ["selectedNumber"],
+  props: ["selectedNumber", "gridData"],
   data() {
-    return {
-      gridData: Array.from({ length: 9 }, () =>
-        Array.from({ length: 9 }, () => null)
-      ),
-    };
+    return {};
   },
   methods: {
     handleCellUpdate({ groupIndex, cellIndex, newValue }) {
