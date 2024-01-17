@@ -4,6 +4,7 @@
       v-for="(cell, index) in groupData"
       :key="index"
       :cellData="cell"
+      :selectedNumber="selectedNumber"
       @update="emitCellUpdate(index, $event)"
     >
     </cell-component>
@@ -17,7 +18,7 @@ export default {
   components: {
     CellComponent,
   },
-  props: ["groupData", "groupIndex"],
+  props: ["groupData", "groupIndex", "selectedNumber"],
   methods: {
     emitCellUpdate(cellIndex, newValue) {
       this.$emit("cell-update", {

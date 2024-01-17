@@ -1,11 +1,11 @@
 <template>
   <div
-    @click="setToZero"
+    @click="updateCellValue"
     class="flex cell border shadow-none h-full w-full items-center justify-center align-middle relative"
   >
     <input
       readonly
-      class="flex h-full w-full bg-transparent p-0 m-0 leading-normal text-white focus:outline-none focus:ring-0 justify-center items-center text-dynamic text-center read-only:cursor-default"
+      class="flex h-full w-full bg-transparent p-0 m-0 leading-normal text-white focus:outline-none focus:ring-0 justify-center items-center text-3xl text-center read-only:cursor-default"
       v-model="localValue"
     />
   </div>
@@ -13,7 +13,8 @@
 
 <script>
 export default {
-  props: ["cellData"],
+  props: ["cellData", "selectedNumber"],
+
   computed: {
     localValue: {
       get() {
@@ -25,9 +26,8 @@ export default {
     },
   },
   methods: {
-    setToZero() {
-      this.localValue = 0;
-      this.$emit("update", 0);
+    updateCellValue() {
+      this.localValue = this.selectedNumber;
     },
   },
 };
