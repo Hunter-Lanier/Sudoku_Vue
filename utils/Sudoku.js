@@ -36,29 +36,87 @@ export default class Sudoku {
    * @returns {boolean} - True if the number can be placed, false otherwise.
    */
   isValid(row, col, num) {
-    if (this.board[row].includes(num)) {
-      return false;
-    }
+    // Check the row
     for (let i = 0; i < 9; i++) {
-      if (this.board[i][col] === num) {
+      if (i !== col && this.board[row][i] === num) {
         return false;
       }
     }
-    const boxRow = Math.floor(row / 3) * 3;
-    const boxCol = Math.floor(col / 3) * 3;
-    for (let i = boxRow; i < boxRow + 3; i++) {
-      for (let j = boxCol; j < boxCol + 3; j++) {
-        if (this.board[i][j] === num) {
+
+    // Check the column
+    for (let i = 0; i < 9; i++) {
+      if (i !== row && this.board[i][col] === num) {
+        return false;
+      }
+    }
+
+    // Check the box
+    const startRow = row - (row % 3);
+    const startCol = col - (col % 3);
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        const checkRow = startRow + i;
+        const checkCol = startCol + j;
+        if (
+          (checkRow !== row || checkCol !== col) &&
+          this.board[checkRow][checkCol] === num
+        ) {
           return false;
         }
       }
     }
     return true;
   }
+  /**
+   * Checks if a entire board is in a valid state.
+   * @returns {boolean} - true if the entire board is in a valid state, false otherwise.
+   */
+  isValidBoard() {
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        if (this.board[row][col] !== 0) {
+          if (!this.isValid(row, col, this.board[row][col])) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+  /**
+   * Checks if the board is solved.
+   * @returns {number[][]} - The Sudoku Board
+   */
+  isSolved() {
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        if (
+          this.board[row][col] == null ||
+          null ||
+          !this.isValid(row, col, this.board[row][col])
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  /**
+   * Converts all Null values to 0 for Computation
+   * @returns {number[][]} - The board with null converted to zeros.
+   */
+  convertToZero() {
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        if (this.board[i][j] === null) {
+          this.board[i][j] = 0;
+        }
+      }
+    }
+  }
 
   /**
    * Recursive helper function to solve the Sudoku board.
-   * @param {number[][]} board - The Sudoku board.
    * @returns {boolean} - True if the board is solved, false otherwise.
    */
   solveHelper() {
@@ -88,13 +146,7 @@ export default class Sudoku {
    */
   solve() {
     // Convert null values to 0
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {
-        if (this.board[i][j] === null) {
-          this.board[i][j] = 0;
-        }
-      }
-    }
+    this.convertToZero();
     // main solving function
     this.solveHelper();
 
