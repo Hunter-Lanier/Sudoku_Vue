@@ -80,7 +80,7 @@ export default {
       // Randomize the board
       this.Sudoku.randomizeBoard();
       // Remove some numbers
-      this.Sudoku.removeHints(100);
+      this.Sudoku.removeHints(40);
       // Save the starting grid
       this.startingGrid = this.Sudoku.board.map((row) => row.slice());
       // Start Timer

@@ -162,9 +162,10 @@ export default class Sudoku {
     while (removed < hints) {
       let row = Math.floor(Math.random() * 9);
       let col = Math.floor(Math.random() * 9);
-      if (this.board[row][col] !== 0) {
+      if (this.board[row][col] !== 0 || null) {
         this.board[row][col] = null;
         removed++;
+        console.log(removed);
       }
     }
     return this.board;
