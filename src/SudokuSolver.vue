@@ -149,7 +149,9 @@ export default {
 };
 </script>
 <template>
-  <div class="flex flex-col justify-center items-center max-h-screen">
+  <div
+    class="flex flex-col justify-center items-center h-screen w-screen bg-gray-900"
+  >
     <span
       :class="{
         'text-5xl text-bold animate-bounce': isSolved,
