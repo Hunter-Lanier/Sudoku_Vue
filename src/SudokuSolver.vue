@@ -44,6 +44,7 @@ export default {
       invalidCells: Array(9).fill(Array(9).fill(false)),
       startingGrid: null,
       isSolved: false,
+      candidateToggle: false,
     };
   },
   methods: {
@@ -155,10 +156,10 @@ export default {
   <!-- App Container -->
   <div class="flex flex-col items-center justify-around">
     <!-- Header -->
-    <h1 class="text-center border">Sudoku Solver</h1>
+    <h1 class="text-center text-3xl mt-5">Sudoku Solver</h1>
     <!-- Solved Alert-->
     <span
-      class="text-center border"
+      class="text-center text-3xl text-green-500"
       :class="{
         'text-bold animate-bounce': isSolved,
         invisible: !isSolved,
@@ -166,7 +167,7 @@ export default {
       >You did it!</span
     >
     <!-- Timer-->
-    <span class="flex justify-center"
+    <span class="flex justify-center text-3xl"
       >Timer:{{ Timer.elapsedMinutes < 10 ? "0" : ""
       }}{{ Timer.elapsedMinutes < 10 ? "0" : "" }}:{{
         Timer.elapsedSeconds < 10 ? "0" : ""
@@ -174,7 +175,7 @@ export default {
     >
     <!-- Sudoku Board -->
     <div
-      class="grid aspect-square w-11/12"
+      class="grid aspect-square w-screen lg:w-1/2"
       :class="{
         'animate-[wiggle_1s_ease-in-out_infinite]': this.invalidBoardFound,
         'animate-none': !this.invalidBoardFound,
@@ -194,6 +195,10 @@ export default {
           :key="i"
           @click="updateCell(j, i)"
           class="flex justify-center items-center text-center border border-black aspect-square"
+          :class="{
+            'bg-red-500': invalidCells[j][i],
+            'bg-none': !invalidCells[j][i],
+          }"
         >
           <!-- Possibility Grid-->
           <div
@@ -201,7 +206,9 @@ export default {
           >
             <span
               class="font-extralight text-fit"
-              v-for="item in this.Sudoku.candidateKeys[j][i]"
+              v-for="item in candidateToggle
+                ? this.Sudoku.candidateKeys[j][i]
+                : []"
               :class="{
                 invisible: cell !== null,
               }"
@@ -209,33 +216,61 @@ export default {
             >
           </div>
           <!-- Cell Value -->
-          <span
-            class="absolute font-bold text-xsm"
-            :class="{
-              'bg-red-500': invalidCells[j][i],
-              'bg-none': !invalidCells[j][i],
-            }"
-          >
+          <span class="absolute font-bold text-xsm">
             {{ cell }}
           </span>
         </div>
       </div>
     </div>
     <!-- Number Selection -->
-    <div class="flex justify-between border gap-5">
+    <div class="flex justify-around mt-3 w-screen">
       <!-- 1..9 Selection-->
-      <button v-for="n in 9" @click="selectNumber(n)" :key="n" class="flex">
+      <button
+        v-for="n in 9"
+        @click="selectNumber(n)"
+        :key="n"
+        class="flex text-3xl hover:text-blue-500 focus:text-blue-500"
+      >
         {{ n }}
       </button>
       <!-- Clear Selection -->
-      <button @click="selectNumber(null)" class="flex">X</button>
+      <button
+        @click="selectNumber(null)"
+        class="flex text-3xl hover:text-blue-500 focus:text-blue-500"
+      >
+        X
+      </button>
     </div>
     <!-- Game Buttons -->
-    <div class="flex gap-5">
-      <button @click="solveGame" class="flex">Solve</button>
-      <button @click="startGame" class="flex">New Game</button>
-      <button @click="resetGame" class="flex">Reset</button>
-      <button @click="this.Sudoku.setCandidates()" class="flex">
+    <div class="flex mt-3 w-screen h-fit justify-around items-center">
+      <button
+        @click="solveGame"
+        class="flex text-xl hover:text-blue-500 focus:text-blue-500"
+      >
+        Solve
+      </button>
+      <button
+        @click="startGame"
+        class="flex text-xl hover:text-blue-500 focus:text-blue-500"
+      >
+        New Game
+      </button>
+      <button
+        @click="resetGame"
+        class="flex text-xl hover:text-blue-500 focus:text-blue-500"
+      >
+        Reset
+      </button>
+      <button
+        @click="Sudoku.clearBoard()"
+        class="flex text-xl hover:text-blue-500 focus:text-blue-500"
+      >
+        Clear
+      </button>
+      <button
+        @click="this.candidateToggle = !this.candidateToggle"
+        class="flex text-xl hover:text-blue-500 focus:text-blue-500"
+      >
         Candidates
       </button>
     </div>

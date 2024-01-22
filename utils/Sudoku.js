@@ -307,6 +307,19 @@ export default class Sudoku {
     return this.board;
   }
 
+  getHint() {
+    const sensors = [() => this.findLastFreeCell()];
+    for (let sensor of sensors) {
+      const hint = sensor();
+      if (hint) {
+        console.log(hint);
+        return true;
+      }
+    }
+    console.log("No hints available");
+    return false;
+  }
+
   // ---- Solving Life Cycle----- //
   solve() {
     // Convert null values to 0
@@ -316,11 +329,40 @@ export default class Sudoku {
 
     return this.board;
   }
+
+  // Last Free Cell
+  findLastFreeCell() {
+    // Example implementation
+    for (let i = 0; i < 9; i++) {
+      // Loop through rows and columns
+      for (let j = 0; j < 9; j++) {
+        if (this.board[i][j] === 0) {
+          // Assuming 0 represents an empty cell
+          // If this is the last free cell in its row, column, or subgrid
+          // Return a hint object
+          return {
+            description: `Place num in row ${i + 1}, column ${j + 1}.`,
+            row: i,
+            column: j,
+            value: this.board[i][j],
+          };
+        }
+      }
+    }
+    return null; // No hint found
+  }
 }
 
 let game = new Sudoku();
-
-game.solve();
-console.log(game.isValidBoard());
-console.log(game.isSolved());
-console.log(game.board);
+game.board = [
+  [1, 0, 0, 0, 0, 0, 0, 0, 0],
+  [2, 0, 0, 0, 0, 0, 0, 0, 0],
+  [3, 0, 0, 0, 0, 0, 0, 0, 0],
+  [4, 0, 0, 0, 0, 0, 0, 0, 0],
+  [5, 0, 0, 0, 0, 0, 0, 0, 0],
+  [6, 0, 0, 0, 0, 0, 0, 0, 0],
+  [7, 0, 0, 0, 0, 0, 0, 0, 0],
+  [8, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
+console.log(game.getHint());

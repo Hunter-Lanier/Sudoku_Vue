@@ -2,9 +2,6 @@
 export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
-    fontSize: {
-      xxsm: ".3rem",
-    },
     extend: {
       animation: {
         wiggle: "wiggle 1s ease-in-out",
