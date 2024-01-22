@@ -1,81 +1,186 @@
 /**
- * Represents a Sudoku solver.
+ * Name: Sudoku.js
+ * A Sudoku instance class that is used to generate, solve, and manipulate Sudoku boards.
  */
 export default class Sudoku {
-  /**
-   * Creates a new Sudoku solver.
-   * @param {number[][]} board - The Sudoku board to solve.
-   */
-
+  // --------------------------------- //
+  // ---------- CONSTRUCTOR ---------- //
+  // --------------------------------- //
   constructor() {
-    this.board = this.generateBoard();
+    // The Main Sudoku Board. Used as a active state of cell values on the board, indexed by row and column.
+    this.board = [
+      [null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null],
+    ];
+    // The Group Keys for the Sudoku Board. Identical index as number in the main board. Used to reference the group of a index.
+    // Example;= this.board[0][5] is in group 1 because this.GroupKeys[0][5] = 1
+    this.groupKeys = [
+      [0, 0, 0, 1, 1, 1, 2, 2, 2],
+      [0, 0, 0, 1, 1, 1, 2, 2, 2],
+      [0, 0, 0, 1, 1, 1, 2, 2, 2],
+      [3, 3, 3, 4, 4, 4, 5, 5, 5],
+      [3, 3, 3, 4, 4, 4, 5, 5, 5],
+      [3, 3, 3, 4, 4, 4, 5, 5, 5],
+      [6, 6, 6, 7, 7, 7, 8, 8, 8],
+      [6, 6, 6, 7, 7, 7, 8, 8, 8],
+      [6, 6, 6, 7, 7, 7, 8, 8, 8],
+    ];
+    // The Candidate Keys for the Sudoku Board. Instead of Value, the index returns an array of possible values for the cell.
+    this.candidateKeys = [
+      [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      ],
+      [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      ],
+      [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      ],
+      [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      ],
+      [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      ],
+      [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      ],
+      [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      ],
+      [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      ],
+      [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      ],
+    ];
   }
-  /**
-   * Clear exsisting board while maintaining the same instance
-   */
-  clearBoard() {
-    this.board = this.generateBoard();
-  }
+  // ----------------------------- //
+  // ---------- METHODS ---------- //
+  // ----------------------------- //
 
-  /**
-   * Recursive helper function to solve the Sudoku board.
-   * @returns {number[][]} - True if the board is solved, false otherwise.
-   */
-  generateBoard() {
-    let board = Array.from({ length: 9 }, () =>
+  // ---- Clear Board ----- //
+  clearBoard() {
+    this.board = Array.from({ length: 9 }, () =>
       Array.from({ length: 9 }, () => null)
     );
-    return board;
   }
 
-  /**
-   * Checks if a number can be placed in a specific position on the Sudoku board.
-   * @param {number} row - The row index.
-   * @param {number} col - The column index.
-   * @param {number} num - The number to check.
-   * @returns {boolean} - True if the number can be placed, false otherwise.
-   */
+  // ---- Check if number is valid a placement ----- //
   isValid(row, col, num) {
     // Check the row
-    for (let i = 0; i < 9; i++) {
-      if (i !== col && this.board[row][i] === num) {
+    for (let cell = 0; cell < 9; cell++) {
+      if (this.board[row][cell] === num && cell !== col) {
+        console.log(
+          `Number ${num} is not valid at row ${row} and col ${col} due to number in the same row at cell ${cell}`
+        );
         return false;
       }
     }
-
     // Check the column
-    for (let i = 0; i < 9; i++) {
-      if (i !== row && this.board[i][col] === num) {
+    for (let rows = 0; rows < 9; rows++) {
+      if (this.board[rows][col] === num && rows !== row) {
+        console.log(
+          `Number ${num} is not valid at row ${row} and col ${col} due to number in column at row ${rows} and col ${col}`
+        );
         return false;
       }
     }
-
     // Check the box
-    const startRow = row - (row % 3);
-    const startCol = col - (col % 3);
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        const checkRow = startRow + i;
-        const checkCol = startCol + j;
-        if (
-          (checkRow !== row || checkCol !== col) &&
-          this.board[checkRow][checkCol] === num
-        ) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-  /**
-   * Checks if a entire board is in a valid state.
-   * @returns {boolean} - true if the entire board is in a valid state, false otherwise.
-   */
-  isValidBoard() {
-    for (let row = 0; row < 9; row++) {
-      for (let col = 0; col < 9; col++) {
-        if (this.board[row][col] !== 0) {
-          if (!this.isValid(row, col, this.board[row][col])) {
+
+    // Calculate the starting point of the 3x3 box
+    let startRow = Math.floor(row / 3) * 3;
+    let startCol = Math.floor(col / 3) * 3;
+
+    // Check only the 3x3 box
+    for (let r = startRow; r < startRow + 3; r++) {
+      for (let c = startCol; c < startCol + 3; c++) {
+        // Check if the cell is not the one we're trying to fill, and if it contains the same number
+        if (r !== row || c !== col) {
+          if (this.board[r][c] === num) {
+            console.log(
+              `Number ${num} is not valid at row ${row} and col ${col} due to number in group at row ${r} and col ${c}`
+            );
             return false;
           }
         }
@@ -83,17 +188,28 @@ export default class Sudoku {
     }
     return true;
   }
-  /**
-   * Checks if the board is solved.
-   * @returns {number[][]} - The Sudoku Board
-   */
+
+  // ---- Check if the board is valid ----- //
+  isValidBoard() {
+    for (let rows = 0; rows < 9; rows++) {
+      for (let cell = 0; cell < 9; cell++) {
+        if (this.board[rows][cell] !== 0 && this.board[rows][cell] !== null) {
+          if (!this.isValid(rows, cell, this.board[rows][cell])) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+  // ---- Check if the board is solved ----- //
   isSolved() {
-    for (let row = 0; row < 9; row++) {
-      for (let col = 0; col < 9; col++) {
+    for (let rows = 0; rows < 9; rows++) {
+      for (let cell = 0; cell < 9; cell++) {
         if (
-          this.board[row][col] == null ||
-          null ||
-          !this.isValid(row, col, this.board[row][col])
+          this.board[rows][cell] == null &&
+          this.board[rows][cell] == 0 &&
+          !this.isValidBoard()
         ) {
           return false;
         }
@@ -101,24 +217,50 @@ export default class Sudoku {
     }
     return true;
   }
-  /**
-   * Converts all Null values to 0 for Computation
-   * @returns {number[][]} - The board with null converted to zeros.
-   */
+  // ---- Convert Null to Zero ----- //
   convertToZero() {
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {
-        if (this.board[i][j] === null) {
-          this.board[i][j] = 0;
+    for (let rows = 0; rows < 9; rows++) {
+      for (let cell = 0; cell < 9; cell++) {
+        if (this.board[rows][cell] === null) {
+          this.board[rows][cell] = 0;
         }
       }
     }
   }
 
-  /**
-   * Recursive helper function to solve the Sudoku board.
-   * @returns {boolean} - True if the board is solved, false otherwise.
-   */
+  // -- Set Candiate Keys ----- //
+  setCandidates() {
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        // Reset the candidate keys for the cell if it is empty
+        if (this.board[row][col] === 0 || this.board[row][col] === null) {
+          this.candidateKeys[row][col] = [];
+
+          for (let num = 1; num <= 9; num++) {
+            // Check if the number is a valid candidate
+            if (this.isValid(row, col, num)) {
+              // Add to the candidate keys for the cell
+              this.candidateKeys[row][col].push(num);
+              console.log(
+                `Number ${num} is a valid candidate at row ${row} and col ${col}`
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ---- Reset Candiate Keys ----- //
+  resetCandidates() {
+    for (let rows = 0; rows < this.candidateKeys.length; rows++) {
+      for (let cell = 0; cell < 9; cell++) {
+        this.candidateKeys[rows][cell] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      }
+    }
+  }
+
+  // ---- Solving Algorithim ----- //
   solveHelper() {
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
@@ -126,43 +268,26 @@ export default class Sudoku {
           for (let num = 1; num <= 9; num++) {
             if (this.isValid(row, col, num)) {
               this.board[row][col] = num;
-              if (this.solveHelper(this.board)) {
-                return true;
+              if (this.solveHelper()) {
+                return true; // If solveHelper() leads to a solution
               }
-              this.board[row][col] = 0;
+              this.board[row][col] = 0; // Backtrack if no solution found
             }
           }
-          return false;
+          return false; // Return false if no number fits in the current cell
         }
       }
     }
-    return true;
+    return true; // Return true when the entire board is filled correctly
   }
 
-  /**
-   * Solves the Sudoku board. Combination of the solveHelper and lifecycle methods.
-   * @param {number[][]} board - The Sudoku board to solve.
-   * @returns {number[][]} - The solved Sudoku board.
-   */
-  solve() {
-    // Convert null values to 0
-    this.convertToZero();
-    // main solving function
-    this.solveHelper();
-
-    return this.board;
-  }
-  /**
-   * Removes hints from the Sudoku board.
-   * @param {number} hints - The number of hints to remove.
-   * @returns {number[][]} - The Sudoku board with hints.
-   */
+  // ---- Remove Random Hints----- //
   removeHints(hints) {
     let removed = 0;
     while (removed < hints) {
       let row = Math.floor(Math.random() * 9);
       let col = Math.floor(Math.random() * 9);
-      if (this.board[row][col] !== 0 || null) {
+      if (this.board[row][col] !== 0 && this.board[row][col] !== null) {
         this.board[row][col] = null;
         removed++;
         console.log(removed);
@@ -171,123 +296,20 @@ export default class Sudoku {
     return this.board;
   }
 
-  /**
-   * Swaps rows within a band of the Sudoku grid.
-   */
-  swapRowsWithinBand() {
-    for (let band = 0; band < 9; band += 3) {
-      let row1 = band + Math.floor(Math.random() * 3);
-      let row2 = band + Math.floor(Math.random() * 3);
-      this.swapRows(row1, row2);
-    }
-  }
-  /**
-   * Swaps columns within a stack of the Sudoku grid.
-   */
-  swapColumnsWithinStack() {
-    for (let stack = 0; stack < 9; stack += 3) {
-      let col1 = stack + Math.floor(Math.random() * 3);
-      let col2 = stack + Math.floor(Math.random() * 3);
-      this.swapColumns(col1, col2);
-    }
-  }
-  /**
-   * Applies a random rotation to the Sudoku grid.
-   */
-  applyRandomRotation() {
-    const rotations = Math.floor(Math.random() * 4); // 0 to 3 rotations
-    for (let i = 0; i < rotations; i++) {
-      this.board = this.rotateboard();
-    }
-  }
-  /**
-   * Applies a random reflection to the Sudoku grid.
-   */
-  applyRandomReflection() {
-    if (Math.random() < 0.5) {
-      this.board = this.reflectboardVertically();
-    } else {
-      this.board = this.reflectboardHorizontally();
-    }
-  }
-  /**
-   * Relabels the numbers in the Sudoku grid.
-   */
-  relabelNumbers() {
-    const newLabels = [...Array(9).keys()]
-      .map((i) => i + 1)
-      .sort(() => Math.random() - 0.5);
-    for (let row = 0; row < 9; row++) {
-      for (let col = 0; col < 9; col++) {
-        this.board[row][col] = newLabels[this.board[row][col] - 1];
-      }
-    }
-  }
-  /**
-   * Swaps one Row with another
-   * @param {*} row1
-   * @param {*} row2
-   */
-  swapRows(row1, row2) {
-    [this.board[row1], this.board[row2]] = [this.board[row2], this.board[row1]];
-  }
+  // ---- Solving Life Cycle----- //
+  solve() {
+    // Convert null values to 0
+    this.convertToZero();
+    // main solving function
+    this.solveHelper();
 
-  /**
-   * Swaps one Column with another
-   * @param {*} col1
-   * @param {*} col2
-   */
-  swapColumns(col1, col2) {
-    for (let row = 0; row < 9; row++) {
-      [this.board[row][col1], this.board[row][col2]] = [
-        this.board[row][col2],
-        this.board[row][col1],
-      ];
-    }
-  }
-  /**
-   * Rotates the board 90 degrees
-   * @returns {number[][]} - The rotated Sudoku board.
-   */
-  rotateboard() {
-    return this.board[0].map((val, index) =>
-      this.board.map((row) => row[index]).reverse()
-    );
-  }
-  /**
-   * Reflects the board vertically
-   * @returns {number[][]} - The reflected Sudoku board.
-   */
-  reflectboardVertically() {
-    return this.board.map((row) => row.slice().reverse());
-  }
-  /**
-   * Reflects the board horizontally
-   * @returns {number[][]} - The reflected Sudoku board.
-   */
-  reflectboardHorizontally() {
-    return this.board.slice().reverse();
-  }
-
-  /**
-   * Randomizes the Sudoku board.
-   * @returns {number[][]} - The randomized Sudoku board.
-   */
-  randomizeBoard() {
-    this.swapRowsWithinBand();
-    this.swapColumnsWithinStack();
-    this.applyRandomRotation();
-    this.applyRandomReflection();
-    this.relabelNumbers();
     return this.board;
   }
 }
 
-/**
-***   Usage example   ***
-SudokuBoard = new Sudoku();
-sudokuBoard.solve();
-sudokuBoard.randomizeboard();
+let game = new Sudoku();
 
-console.log(sudokuBoard);
-*/
+game.solve();
+console.log(game.isValidBoard());
+console.log(game.isSolved());
+console.log(game.board);
