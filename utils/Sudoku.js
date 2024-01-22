@@ -265,7 +265,12 @@ export default class Sudoku {
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
         if (this.board[row][col] === 0) {
-          for (let num = 1; num <= 9; num++) {
+          const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+          // Shuffle the array of numbers
+          const shuffledNumbers = numbers.sort(() => Math.random() - 0.5);
+
+          for (let i = 0; i < shuffledNumbers.length; i++) {
+            const num = shuffledNumbers[i];
             if (this.isValid(row, col, num)) {
               this.board[row][col] = num;
               if (this.solveHelper()) {
@@ -280,7 +285,13 @@ export default class Sudoku {
     }
     return true; // Return true when the entire board is filled correctly
   }
+  // --------------------------------- //
+  // ------- Solving Methods --------- //
+  // --------------------------------- //
 
+  // --------------------------------- //
+  // -------Hint Handeling ----------- //
+  // --------------------------------- //
   // ---- Remove Random Hints----- //
   removeHints(hints) {
     let removed = 0;
