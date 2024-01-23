@@ -173,9 +173,23 @@ export default {
         Timer.elapsedSeconds < 10 ? "0" : ""
       }}{{ Timer.elapsedSeconds }}</span
     >
+    <!-- Cosmetic Board -->
+    <div
+      class="grid aspect-square w-screen grid-cols-3 grid-rows-3 border border-black absolute box-border"
+    >
+      <div
+        v-for="item in 9"
+        class="grid grid-cols-3 grid-rows-3 border border-black"
+      >
+        <div
+          v-for="item in 9"
+          class="flex justify-center items-center text-center border border-black"
+        ></div>
+      </div>
+    </div>
     <!-- Sudoku Board -->
     <div
-      class="grid aspect-square w-screen lg:w-1/2"
+      class="grid aspect-square w-screen mb-10"
       :class="{
         'animate-[wiggle_1s_ease-in-out_infinite]': this.invalidBoardFound,
         'animate-none': !this.invalidBoardFound,
@@ -187,14 +201,14 @@ export default {
       <div
         v-for="(row, j) in Sudoku.board"
         :key="j"
-        class="grid grid-cols-9 grid-rows-1 border border-black"
+        class="grid grid-cols-9 grid-rows-1"
       >
         <!--Cells of Board-->
         <div
           v-for="(cell, i) in row"
           :key="i"
           @click="updateCell(j, i)"
-          class="flex justify-center items-center text-center border border-black aspect-square"
+          class="flex justify-center items-center text-center aspect-square"
           :class="{
             'bg-red-500': invalidCells[j][i],
             'bg-none': !invalidCells[j][i],

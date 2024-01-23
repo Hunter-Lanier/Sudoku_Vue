@@ -207,9 +207,8 @@ export default class Sudoku {
     for (let rows = 0; rows < 9; rows++) {
       for (let cell = 0; cell < 9; cell++) {
         if (
-          this.board[rows][cell] == null &&
-          this.board[rows][cell] == 0 &&
-          !this.isValidBoard()
+          this.board[rows][cell] === 0 ||
+          (this.board[rows][cell] === null && this.isValidBoard())
         ) {
           return false;
         }
@@ -358,11 +357,11 @@ game.board = [
   [1, 0, 0, 0, 0, 0, 0, 0, 0],
   [2, 0, 0, 0, 0, 0, 0, 0, 0],
   [3, 0, 0, 0, 0, 0, 0, 0, 0],
-  [4, 0, 0, 0, 0, 0, 0, 0, 0],
+  [4, 0, 0, 0, 4, 0, 0, 0, 0],
   [5, 0, 0, 0, 0, 0, 0, 0, 0],
   [6, 0, 0, 0, 0, 0, 0, 0, 0],
   [7, 0, 0, 0, 0, 0, 0, 0, 0],
   [8, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
-console.log(game.getHint());
+console.log(game.isSolved());
