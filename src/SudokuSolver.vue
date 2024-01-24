@@ -106,7 +106,9 @@ export default {
         setTimeout(() => {
           this.invalidBoardFound = false;
         }, 1000);
+        // stop the timer
       }
+      clearInterval(this.Timer.timerInterval);
     },
     selectNumber(n) {
       this.selectedNumber = n;
@@ -123,13 +125,15 @@ export default {
       }
       // check if the board is solved
       if (this.Sudoku.isSolved()) {
-        this.clearTimer();
+        clearInterval(this.Timer.timerInterval);
         this.isSolved = true;
       } else {
         this.isSolved = false;
       }
       // update candidates
       this.Sudoku.setCandidates();
+      // clear selected number
+      this.selectedNumber = null;
     },
     startTimer() {
       this.Timer.timerInterval = setInterval(() => {
@@ -158,81 +162,84 @@ export default {
     <!-- Header -->
     <h1 class="text-center text-3xl mt-5">Sudoku Solver</h1>
     <!-- Solved Alert-->
-    <span
-      class="text-center text-3xl text-green-500"
-      :class="{
-        'text-bold animate-bounce': isSolved,
-        invisible: !isSolved,
-      }"
-      >You did it!</span
-    >
+    <transition v-if="isSolved">
+      <span class="text-center text-3xl text-green-500 text-bold animate-bounce"
+        >You did it!</span
+      >
+    </transition>
     <!-- Timer-->
-    <span class="flex justify-center text-3xl"
+    <span
+      :class="{ 'text-green-500': this.isSolved }"
+      class="flex justify-center text-3xl"
       >Timer:{{ Timer.elapsedMinutes < 10 ? "0" : ""
       }}{{ Timer.elapsedMinutes < 10 ? "0" : "" }}:{{
         Timer.elapsedSeconds < 10 ? "0" : ""
       }}{{ Timer.elapsedSeconds }}</span
     >
-    <!-- Cosmetic Board -->
-    <div
-      class="grid aspect-square w-screen grid-cols-3 grid-rows-3 border border-black absolute box-border"
-    >
+    <!-- Board Wrapper-->
+    <div class="">
+      <!-- Cosmetic Board -->
+      <div class=""></div>
       <div
-        v-for="item in 9"
-        class="grid grid-cols-3 grid-rows-3 border border-black"
+        class="grid aspect-square w-screen grid-cols-3 grid-rows-3 border border-black absolute box-border"
       >
         <div
           v-for="item in 9"
-          class="flex justify-center items-center text-center border border-black"
-        ></div>
-      </div>
-    </div>
-    <!-- Sudoku Board -->
-    <div
-      class="grid aspect-square w-screen mb-10"
-      :class="{
-        'animate-[wiggle_1s_ease-in-out_infinite]': this.invalidBoardFound,
-        'animate-none': !this.invalidBoardFound,
-        'border-green-500': this.isSolved,
-        'border-white': !this.isSolved,
-      }"
-    >
-      <!--Rows of Board-->
-      <div
-        v-for="(row, j) in Sudoku.board"
-        :key="j"
-        class="grid grid-cols-9 grid-rows-1"
-      >
-        <!--Cells of Board-->
-        <div
-          v-for="(cell, i) in row"
-          :key="i"
-          @click="updateCell(j, i)"
-          class="flex justify-center items-center text-center aspect-square"
-          :class="{
-            'bg-red-500': invalidCells[j][i],
-            'bg-none': !invalidCells[j][i],
-          }"
+          class="grid grid-cols-3 grid-rows-3 border border-black"
         >
-          <!-- Possibility Grid-->
           <div
-            class="grid grid-cols-3 grid-rows-3 justify-around items-center h-full w-full aspect-square relative"
+            v-for="item in 9"
+            class="flex justify-center items-center text-center border border-black"
+          ></div>
+        </div>
+      </div>
+      <!-- Sudoku Board -->
+      <div
+        class="grid aspect-square w-screen"
+        :class="{
+          'animate-[wiggle_1s_ease-in-out_infinite]': this.invalidBoardFound,
+          'animate-none': !this.invalidBoardFound,
+          'border-green-500': this.isSolved,
+          'border-white': !this.isSolved,
+        }"
+      >
+        <!--Rows of Board-->
+        <div
+          v-for="(row, j) in Sudoku.board"
+          :key="j"
+          class="grid grid-cols-9 grid-rows-1"
+        >
+          <!--Cells of Board-->
+          <div
+            v-for="(cell, i) in row"
+            :key="i"
+            @click="updateCell(j, i)"
+            class="flex justify-center items-center text-center aspect-square"
+            :class="{
+              'bg-red-500': invalidCells[j][i],
+              'bg-none': !invalidCells[j][i],
+            }"
           >
-            <span
-              class="font-extralight text-fit"
-              v-for="item in candidateToggle
-                ? this.Sudoku.candidateKeys[j][i]
-                : []"
-              :class="{
-                invisible: cell !== null,
-              }"
-              >{{ item }}</span
+            <!-- Possibility Grid-->
+            <div
+              class="grid grid-cols-3 grid-rows-3 justify-around items-center h-full w-full aspect-square relative"
             >
+              <span
+                class="font-extralight text-fit"
+                v-for="item in candidateToggle
+                  ? this.Sudoku.candidateKeys[j][i]
+                  : []"
+                :class="{
+                  invisible: cell !== null,
+                }"
+                >{{ item }}</span
+              >
+            </div>
+            <!-- Cell Value -->
+            <span class="absolute font-bold text-3xl">
+              {{ cell }}
+            </span>
           </div>
-          <!-- Cell Value -->
-          <span class="absolute font-bold text-xsm">
-            {{ cell }}
-          </span>
         </div>
       </div>
     </div>
