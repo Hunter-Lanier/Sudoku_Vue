@@ -159,7 +159,7 @@ export default {
 </script>
 <template>
   <!-- App Container -->
-  <div class="flex-col text-center">
+  <div class="flex flex-col text-center gap-4">
     <!-- Solved Alert-->
     <transition v-if="isSolved">
       <span class="text-center text-3xl text-green-500 text-bold animate-bounce"
@@ -256,50 +256,71 @@ export default {
         v-for="n in 9"
         @click="selectNumber(n)"
         :key="n"
-        class="flex text-3xl hover:text-blue-500 focus:text-blue-500"
+        class="flex text-5xl hover:text-blue-500 focus:text-blue-500"
       >
         {{ n }}
       </button>
+      <!-----------------Dashboard------------------->
+    </div>
+
+    <!-- Game Buttons -->
+    <div class="grid grid-cols-3 mt-3 w-screen h-fit items-center gap-5">
       <!-- Clear Selection -->
       <button
         @click="selectNumber(null)"
-        class="flex text-3xl hover:text-blue-500 focus:text-blue-500"
+        class="flex text-3xl border justify-center hover:text-blue-500 focus:text-blue-500"
       >
-        X
+        <i class="flex flex-col fa-solid fa-eraser"
+          ><span class="font-normal font-sans text-sm">Erase</span></i
+        >
       </button>
-    </div>
-    <!-- Game Buttons -->
-    <div class="flex mt-3 w-screen h-fit justify-around items-center">
       <button
         @click="solveGame"
-        class="flex text-xl hover:text-blue-500 focus:text-blue-500"
+        class="flex text-3xl border justify-center hover:text-blue-500 focus:text-blue-500"
       >
-        Solve
+        <i class="flex flex-col fa-solid fa-robot"
+          ><span class="font-normal font-sans text-sm">Auto Solve</span></i
+        >
       </button>
       <button
         @click="startGame"
-        class="flex text-xl hover:text-blue-500 focus:text-blue-500"
+        class="flex text-3xl border justify-center hover:text-blue-500 focus:text-blue-500"
       >
-        New Game
+        <i class="fa-solid fa-play flex flex-col"
+          ><span class="font-normal font-sans text-sm">New Game</span></i
+        >
       </button>
       <button
         @click="resetGame"
-        class="flex text-xl hover:text-blue-500 focus:text-blue-500"
+        class="flex text-3xl border justify-center hover:text-blue-500 focus:text-blue-500"
       >
-        Reset
+        <i class="fa-solid fa-rotate-left flex flex-col"
+          ><span class="font-normal font-sans text-sm">Reset</span></i
+        >
       </button>
       <button
         @click="Sudoku.clearBoard()"
-        class="flex text-xl hover:text-blue-500 focus:text-blue-500"
+        class="flex text-3xl border justify-center hover:text-blue-500 focus:text-blue-500"
       >
-        Clear
+        <i class="fa-solid fa-trash-can flex flex-col"
+          ><span class="font-normal font-sans text-sm">Clear Board</span></i
+        >
       </button>
       <button
-        @click="this.candidateToggle = !this.candidateToggle"
-        class="flex text-xl hover:text-blue-500 focus:text-blue-500"
+        class="flex text-3xl border justify-center hover:text-blue-500 focus:text-blue-500"
       >
-        Candidates
+        <i class="fa-solid fa-pen-to-square flex flex-col"
+          ><span class="font-normal font-sans text-sm">Notes</span></i
+        >
       </button>
+      <!--
+      <button
+        @click="this.candidateToggle = !this.candidateToggle"
+        class="hover:text-blue-500 focus:text-blue-500"
+      >
+        Auto Candidates
+      </button>
+      -->
     </div>
   </div>
 </template>
