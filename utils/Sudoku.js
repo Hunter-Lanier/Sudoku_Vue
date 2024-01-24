@@ -214,7 +214,7 @@ export default class Sudoku {
         }
       }
     }
-    return true;
+    return this.isValidBoard;
   }
   // ---- Convert Null to Zero ----- //
   convertToZero() {
