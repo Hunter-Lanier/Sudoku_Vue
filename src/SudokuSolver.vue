@@ -45,6 +45,7 @@ export default {
       startingGrid: null,
       isSolved: false,
       candidateToggle: false,
+      difficulty: "Easy",
     };
   },
   methods: {
@@ -158,24 +159,29 @@ export default {
 </script>
 <template>
   <!-- App Container -->
-  <div class="flex flex-col items-center justify-around">
-    <!-- Header -->
-    <h1 class="text-center text-3xl mt-5">Sudoku Solver</h1>
+  <div class="flex-col text-center">
     <!-- Solved Alert-->
     <transition v-if="isSolved">
       <span class="text-center text-3xl text-green-500 text-bold animate-bounce"
         >You did it!</span
       >
     </transition>
+    <!-- Header -->
+    <div class="flex flex-row text-lg items-center justify-between">
+      <span>Difficulty:{{ this.difficulty }}</span>
+      <!-- Logo-->
+      <h1 class="text-lg">Sudok<span class="text-green-500">V</span>ue</h1>
+      <!--TImer-->
+      <span
+        :class="{ 'text-green-500': this.isSolved }"
+        class="flex justify-center text-lg h-fit"
+        >Timer:{{ Timer.elapsedMinutes < 10 ? "0" : ""
+        }}{{ Timer.elapsedMinutes }}:{{ Timer.elapsedSeconds < 10 ? "0" : ""
+        }}{{ Timer.elapsedSeconds }}</span
+      >
+    </div>
     <!-- Timer-->
-    <span
-      :class="{ 'text-green-500': this.isSolved }"
-      class="flex justify-center text-3xl"
-      >Timer:{{ Timer.elapsedMinutes < 10 ? "0" : ""
-      }}{{ Timer.elapsedMinutes < 10 ? "0" : "" }}:{{
-        Timer.elapsedSeconds < 10 ? "0" : ""
-      }}{{ Timer.elapsedSeconds }}</span
-    >
+
     <!-- Board Wrapper-->
     <div class="">
       <!-- Cosmetic Board -->
