@@ -151,18 +151,12 @@ export default class Sudoku {
     // Check the row
     for (let cell = 0; cell < 9; cell++) {
       if (this.board[row][cell] === num && cell !== col) {
-        console.log(
-          `Number ${num} is not valid at row ${row} and col ${col} due to number in the same row at cell ${cell}`
-        );
         return false;
       }
     }
     // Check the column
     for (let rows = 0; rows < 9; rows++) {
       if (this.board[rows][col] === num && rows !== row) {
-        console.log(
-          `Number ${num} is not valid at row ${row} and col ${col} due to number in column at row ${rows} and col ${col}`
-        );
         return false;
       }
     }
@@ -178,9 +172,6 @@ export default class Sudoku {
         // Check if the cell is not the one we're trying to fill, and if it contains the same number
         if (r !== row || c !== col) {
           if (this.board[r][c] === num) {
-            console.log(
-              `Number ${num} is not valid at row ${row} and col ${col} due to number in group at row ${r} and col ${c}`
-            );
             return false;
           }
         }
@@ -240,9 +231,6 @@ export default class Sudoku {
             if (this.isValid(row, col, num)) {
               // Add to the candidate keys for the cell
               this.candidateKeys[row][col].push(num);
-              console.log(
-                `Number ${num} is a valid candidate at row ${row} and col ${col}`
-              );
             }
           }
         }
@@ -300,7 +288,6 @@ export default class Sudoku {
       if (this.board[row][col] !== 0 && this.board[row][col] !== null) {
         this.board[row][col] = null;
         removed++;
-        console.log(removed);
       }
     }
     return this.board;
@@ -311,11 +298,10 @@ export default class Sudoku {
     for (let sensor of sensors) {
       const hint = sensor();
       if (hint) {
-        console.log(hint);
         return true;
       }
     }
-    console.log("No hints available");
+
     return false;
   }
 
@@ -351,7 +337,7 @@ export default class Sudoku {
     return null; // No hint found
   }
 }
-
+/*
 let game = new Sudoku();
 game.board = [
   [1, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -364,4 +350,4 @@ game.board = [
   [8, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
-console.log(game.isSolved());
+*/
