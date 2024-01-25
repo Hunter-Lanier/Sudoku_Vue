@@ -258,7 +258,7 @@ export default {
         v-for="n in 9"
         @click="selectNumber(n)"
         :key="n"
-        class="flex text-5xl hover:text-blue-500 focus:text-blue-500"
+        class="flex text-5xl hover:text-blue-500 focus:text-blue-500 hover:text-6xl"
       >
         {{ n }}
       </button>
