@@ -115,6 +115,9 @@ export default {
       this.selectedNumber = n;
     },
     updateCell(row, col) {
+      if (this.invalidCells[row][col]) {
+        this.selectedNumber = null;
+      }
       this.Sudoku.board[row][col] = this.selectedNumber;
       if (
         this.Sudoku.isValid(row, col, this.selectedNumber) ||
@@ -126,6 +129,7 @@ export default {
       }
       // check if the board is solved
       if (this.Sudoku.isSolved()) {
+        // stop the timer
         clearInterval(this.Timer.timerInterval);
         this.isSolved = true;
       } else {
@@ -133,8 +137,6 @@ export default {
       }
       // update candidates
       this.Sudoku.setCandidates();
-      // clear selected number
-      this.selectedNumber = null;
     },
     startTimer() {
       this.Timer.timerInterval = setInterval(() => {
