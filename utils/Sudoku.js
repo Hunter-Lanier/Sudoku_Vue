@@ -199,13 +199,14 @@ export default class Sudoku {
       for (let cell = 0; cell < 9; cell++) {
         if (
           this.board[rows][cell] === 0 ||
-          (this.board[rows][cell] === null && this.isValidBoard())
+          this.board[rows][cell] === null ||
+          !this.isValid(rows, cell, this.board[rows][cell])
         ) {
           return false;
         }
       }
     }
-    return this.isValidBoard;
+    return true;
   }
   // ---- Convert Null to Zero ----- //
   convertToZero() {
@@ -337,17 +338,18 @@ export default class Sudoku {
     return null; // No hint found
   }
 }
-/*
+
 let game = new Sudoku();
 game.board = [
   [1, 0, 0, 0, 0, 0, 0, 0, 0],
   [2, 0, 0, 0, 0, 0, 0, 0, 0],
   [3, 0, 0, 0, 0, 0, 0, 0, 0],
   [4, 0, 0, 0, 4, 0, 0, 0, 0],
-  [5, 0, 0, 0, 0, 0, 0, 0, 0],
-  [6, 0, 0, 0, 0, 0, 0, 0, 0],
-  [7, 0, 0, 0, 0, 0, 0, 0, 0],
+  [5, 0, 0, 0, 0, 0, null, 0, 0],
+  [6, 0, 0, 0, 0, 0, 1, 0, 0],
+  [7, 0, 0, 0, 0, 0, 1, 0, 0],
   [8, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
-*/
+
+console.log(game.isSolved());
